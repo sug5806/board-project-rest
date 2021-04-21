@@ -1,1 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/board-rest?autoReconnect=true&useUnicode=true&serverTimezone=UTC&characterEncoding=UTF8
+    username: root
+    password: ghd9413
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
