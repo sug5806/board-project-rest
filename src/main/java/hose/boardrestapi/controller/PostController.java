@@ -2,39 +2,30 @@ package hose.boardrestapi.controller;
 
 import hose.boardrestapi.dto.PostDTO;
 import hose.boardrestapi.service.PostService;
-import hose.boardrestapi.util.Response;
+import hose.boardrestapi.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
-
     private final PostService postService;
 
     @GetMapping("post/{id}")
-    public String getPost(@PathVariable(name = "id") Long id) {
-        return "hello";
+    public ResponseEntity<ResponseUtil> getPost(@PathVariable(name = "id") Long id) {
+        PostDTO post = postService.getPost(id);
+
+        return ResponseUtil.success(post, HttpStatus.OK);
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Response> createPost(@Valid @RequestBody PostDTO postDTO) {
-        Long postId = postService.createPost(postDTO);
+    public ResponseEntity<ResponseUtil> createPost(@Valid @RequestBody PostDTO postDTO) {
+        PostDTO post = postService.createPost(postDTO);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-
-        PostDTO postDTOResponse = PostDTO.builder().id(postId).build();
-
-        Response response = new Response("success", postDTOResponse);
-
-        return new ResponseEntity<>(response, headers, HttpStatus.CREATED);
+        return ResponseUtil.success(post, HttpStatus.CREATED);
     }
 }
