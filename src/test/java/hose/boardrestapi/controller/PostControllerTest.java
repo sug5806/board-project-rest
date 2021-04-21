@@ -89,7 +89,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("게시물 가져오기 테스트 - 실패")
+    @DisplayName("존재하지않는 게시물 가져오기")
     @Order(3)
     public void getPostFail() throws Exception {
         mockMvc.perform(get("/post/{id}", 9999999))
@@ -98,4 +98,84 @@ class PostControllerTest {
                 .andExpect(jsonPath("message").value("해당 포스트가 존재하지 않습니다."))
                 .andDo(print());
     }
+
+    @Test
+    public void 게시물_제목_입력안함() throws Exception {
+        // given
+        PostDTO postDTO = PostDTO.builder()
+                .contents("contents")
+                .build();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/post")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        //then
+        resultActions
+                .andExpect(jsonPath("errors").exists())
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors[0]").exists())
+                .andExpect(jsonPath("errors[0].field").exists())
+                .andExpect(jsonPath("errors[0].field").value("title"))
+                .andExpect(jsonPath("errors[0].message").exists())
+                .andExpect(jsonPath("errors[0].message").value("제목을 입력해주세요."))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    public void 게시물_내용_입력안함() throws Exception {
+        // given
+        PostDTO postDTO = PostDTO.builder()
+                .title("title")
+                .build();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/post")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        //then
+        resultActions
+                .andExpect(jsonPath("errors").exists())
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors[0]").exists())
+                .andExpect(jsonPath("errors[0].field").exists())
+                .andExpect(jsonPath("errors[0].field").value("contents"))
+                .andExpect(jsonPath("errors[0].message").exists())
+                .andExpect(jsonPath("errors[0].message").value("내용을 입력해주세요."))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    public void 게시물_내용_제목_입력안함() throws Exception {
+        // given
+        PostDTO postDTO = PostDTO.builder()
+                .build();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/post")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        //then
+        resultActions
+                .andExpect(jsonPath("errors").exists())
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors[0]").exists())
+                .andExpect(jsonPath("errors[0].field").exists())
+                .andExpect(jsonPath("errors[0].field").value("title"))
+                .andExpect(jsonPath("errors[0].message").exists())
+                .andExpect(jsonPath("errors[0].message").value("제목을 입력해주세요."))
+                .andExpect(jsonPath("errors[1]").exists())
+                .andExpect(jsonPath("errors[1].field").exists())
+                .andExpect(jsonPath("errors[1].field").value("contents"))
+                .andExpect(jsonPath("errors[1].message").exists())
+                .andExpect(jsonPath("errors[1].message").value("내용을 입력해주세요."))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
 }
