@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -119,11 +121,8 @@ class PostControllerTest {
         resultActions
                 .andExpect(jsonPath("errors").exists())
                 .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors[0]").exists())
-                .andExpect(jsonPath("errors[0].field").exists())
-                .andExpect(jsonPath("errors[0].field").value("title"))
-                .andExpect(jsonPath("errors[0].message").exists())
-                .andExpect(jsonPath("errors[0].message").value("제목을 입력해주세요."))
+                .andExpect(jsonPath("errors[*].field", containsInAnyOrder("title")))
+                .andExpect(jsonPath("errors[*].message", containsInAnyOrder("제목을 입력해주세요.")))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
@@ -144,11 +143,8 @@ class PostControllerTest {
         resultActions
                 .andExpect(jsonPath("errors").exists())
                 .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors[0]").exists())
-                .andExpect(jsonPath("errors[0].field").exists())
-                .andExpect(jsonPath("errors[0].field").value("contents"))
-                .andExpect(jsonPath("errors[0].message").exists())
-                .andExpect(jsonPath("errors[0].message").value("내용을 입력해주세요."))
+                .andExpect(jsonPath("errors[*].field", containsInAnyOrder("contents")))
+                .andExpect(jsonPath("errors[*].message", containsInAnyOrder("내용을 입력해주세요.")))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
@@ -168,16 +164,10 @@ class PostControllerTest {
         resultActions
                 .andExpect(jsonPath("errors").exists())
                 .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors[0]").exists())
-                .andExpect(jsonPath("errors[0].field").exists())
-                .andExpect(jsonPath("errors[0].field").value("title"))
-                .andExpect(jsonPath("errors[0].message").exists())
-                .andExpect(jsonPath("errors[0].message").value("제목을 입력해주세요."))
-                .andExpect(jsonPath("errors[1]").exists())
-                .andExpect(jsonPath("errors[1].field").exists())
-                .andExpect(jsonPath("errors[1].field").value("contents"))
-                .andExpect(jsonPath("errors[1].message").exists())
-                .andExpect(jsonPath("errors[1].message").value("내용을 입력해주세요."))
+                .andExpect(jsonPath("errors").hasJsonPath())
+                .andExpect(jsonPath("errors", hasSize(2)))
+                .andExpect(jsonPath("errors[*].field", containsInAnyOrder("title", "contents")))
+                .andExpect(jsonPath("errors[*].message", containsInAnyOrder("제목을 입력해주세요.", "내용을 입력해주세요.")))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
