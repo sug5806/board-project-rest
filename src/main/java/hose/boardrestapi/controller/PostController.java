@@ -2,10 +2,9 @@ package hose.boardrestapi.controller;
 
 import hose.boardrestapi.dto.PostDTO;
 import hose.boardrestapi.service.PostService;
-import hose.boardrestapi.util.ResponseUtil;
+import hose.boardrestapi.util.response.sucess.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,16 +15,18 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("post/{id}")
-    public ResponseEntity<ResponseUtil> getPost(@PathVariable(name = "id") Long id) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public SuccessResponse getPost(@PathVariable(name = "id") Long id) {
         PostDTO post = postService.getPost(id);
 
-        return ResponseUtil.success(post, HttpStatus.OK);
+        return SuccessResponse.success(post);
     }
 
     @PostMapping("/post")
-    public ResponseEntity<ResponseUtil> createPost(@Valid @RequestBody PostDTO postDTO) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public SuccessResponse createPost(@Valid @RequestBody PostDTO postDTO) {
         PostDTO post = postService.createPost(postDTO);
 
-        return ResponseUtil.success(post, HttpStatus.CREATED);
+        return SuccessResponse.success(post);
     }
 }

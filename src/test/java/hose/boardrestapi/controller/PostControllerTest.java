@@ -95,7 +95,11 @@ class PostControllerTest {
         mockMvc.perform(get("/post/{id}", 9999999))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").exists())
-                .andExpect(jsonPath("message").value("해당 포스트가 존재하지 않습니다."))
+                .andExpect(jsonPath("message").value("error"))
+                .andExpect(jsonPath("errors[0]").exists())
+                .andExpect(jsonPath("errors[0].field").doesNotExist())
+                .andExpect(jsonPath("errors[0].message").exists())
+                .andExpect(jsonPath("errors[0].message").value("해당 포스트가 존재하지 않습니다."))
                 .andDo(print());
     }
 

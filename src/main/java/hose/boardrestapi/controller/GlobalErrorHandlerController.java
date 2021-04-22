@@ -1,12 +1,10 @@
 package hose.boardrestapi.controller;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
-import hose.boardrestapi.util.ResponseUtil;
-import hose.boardrestapi.util.error.CustomError;
-import hose.boardrestapi.util.error.ErrorResponse;
+import hose.boardrestapi.util.response.error.CustomError;
+import hose.boardrestapi.util.response.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,9 +20,16 @@ public class GlobalErrorHandlerController {
 
     @ExceptionHandler(PostNotFound.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<ResponseUtil> postNotFound(PostNotFound postNotFound) {
+    public ErrorResponse postNotFound(PostNotFound postNotFound) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("error")
+                .build();
 
-        return ResponseUtil.fail(postNotFound.getMessage(), HttpStatus.NOT_FOUND);
+        errorResponse.addError(CustomError.builder()
+                .message(postNotFound.getMessage())
+                .build());
+
+        return errorResponse;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
