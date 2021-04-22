@@ -16,7 +16,7 @@ public class PostController {
 
     @GetMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse getPost(@PathVariable(name = "id") Long id) {
+    public SuccessResponse<PostDTO> getPost(@PathVariable(name = "id") Long id) {
         PostDTO post = postService.getPost(id);
 
         return SuccessResponse.success(post);
@@ -24,9 +24,15 @@ public class PostController {
 
     @PostMapping("/post")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse createPost(@Valid @RequestBody PostDTO postDTO) {
+    public SuccessResponse<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         PostDTO post = postService.createPost(postDTO);
 
         return SuccessResponse.success(post);
+    }
+
+    @PutMapping("post/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO) {
+        return null;
     }
 }

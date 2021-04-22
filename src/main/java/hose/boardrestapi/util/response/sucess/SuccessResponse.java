@@ -12,14 +12,10 @@ public class SuccessResponse<T> {
     private String message;
     private T data;
 
-    public static <T> SuccessResponse success(T data) {
-
-        SuccessResponse responseUtil = SuccessResponse.builder()
+    public static <T> SuccessResponse<T> success(T data) {
+        return SuccessResponse.<T>builder()
                 .message("success")
                 .data(data)
                 .build();
-
-        return responseUtil;
-
     }
 }
