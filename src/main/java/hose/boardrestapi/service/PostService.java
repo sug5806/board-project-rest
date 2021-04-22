@@ -24,7 +24,6 @@ public class PostService {
                 .id(findPost.getId())
                 .title(findPost.getTitle())
                 .contents(findPost.getContents())
-                .createdAt(findPost.getCreateAt().toString())
                 .build();
     }
 
@@ -35,13 +34,32 @@ public class PostService {
                 .createAt(LocalDateTime.now())
                 .build();
 
-        Post save = postRepository.save(post);
+        Post savePost = postRepository.save(post);
 
         PostDTO postDTOResponse = PostDTO.builder()
-                .id(save.getId())
+                .id(savePost.getId())
                 .build();
 
 
         return postDTOResponse;
+    }
+
+    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+        Optional<Post> byId = postRepository.findById(postId);
+        Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+
+        post.changeTitle(postDTO.getTitle());
+        post.changeContents(postDTO.getContents());
+
+        return PostDTO.builder()
+                .id(post.getId())
+                .build();
+    }
+
+    public void deletePost(Long postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+
+        postRepository.delete(post);
     }
 }

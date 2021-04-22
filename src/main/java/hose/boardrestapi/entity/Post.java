@@ -23,4 +23,12 @@ public class Post {
     private String contents;
 
     private LocalDateTime createAt;
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
 }

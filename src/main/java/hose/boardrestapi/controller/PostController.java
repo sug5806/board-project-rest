@@ -32,7 +32,17 @@ public class PostController {
 
     @PutMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO) {
-        return null;
+    public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable(name = "id") Long postId) {
+        PostDTO postDTOResponse = postService.updatePost(postId, postDTO);
+
+        return SuccessResponse.success(postDTOResponse);
     }
+
+    @DeleteMapping("post/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SuccessResponse<String> deletePost(@PathVariable(name = "id") Long postId) {
+        postService.deletePost(postId);
+        return SuccessResponse.success(null);
+    }
+
 }

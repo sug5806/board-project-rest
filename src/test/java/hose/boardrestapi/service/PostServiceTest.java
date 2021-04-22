@@ -6,9 +6,9 @@ import hose.boardrestapi.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 
@@ -18,10 +18,10 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
-    @InjectMocks
+    @Autowired
     private PostService postService;
 
-    @Mock
+    @MockBean
     private PostRepository postRepository;
 
     public PostDTO initPostDTO() {
@@ -54,5 +54,27 @@ class PostServiceTest {
         //then
         assertEquals(savePost.getTitle(), post.getTitle());
         assertEquals(savePost.getContents(), post.getContents());
+    }
+
+    @Test
+    public void 제목_업데이트() throws Exception {
+        // given
+        PostDTO postDTO = PostDTO.builder()
+                .title("title update")
+                .contents("contents")
+                .build();
+
+        Post post = Post.builder()
+                .id(1L)
+                .title("title update")
+                .contents("contents")
+                .build();
+
+        postService.updatePost(1L, postDTO);
+        given(postRepository.save(post)).willReturn(post);
+        // when
+
+
+        // then
     }
 }

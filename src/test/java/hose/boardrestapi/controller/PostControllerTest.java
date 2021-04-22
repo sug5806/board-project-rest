@@ -12,11 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,6 +68,7 @@ class PostControllerTest {
     @Test
     @DisplayName("게시물 가져오기 테스트 - 성공")
     @Order(2)
+    @Transactional
     public void getPostSuccess() throws Exception {
         // given
         PostDTO postDTO = initPostDTO();
@@ -169,6 +170,97 @@ class PostControllerTest {
                 .andExpect(jsonPath("errors[*].field", containsInAnyOrder("title", "contents")))
                 .andExpect(jsonPath("errors[*].message", containsInAnyOrder("제목을 입력해주세요.", "내용을 입력해주세요.")))
                 .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    public void 게시물_제목_변경() throws Exception {
+        // given
+        Long targetPostId = 1L;
+        PostDTO post = postService.getPost(targetPostId);
+
+        PostDTO postDTO = PostDTO.builder()
+                .title("title update")
+                .contents(post.getContents())
+                .build();
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        // then
+        perform
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("message").value("success"))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+    }
+
+    @Test
+    public void 게시물_내용_변경() throws Exception {
+        // given
+        Long targetPostId = 1L;
+        PostDTO post = postService.getPost(targetPostId);
+
+        PostDTO postDTO = PostDTO.builder()
+                .title(post.getTitle())
+                .contents("contents update")
+                .build();
+
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        // then
+        perform
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("message").value("success"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    public void 게시물_제목_내_변경() throws Exception {
+        // given
+        Long targetPostId = 1L;
+        PostDTO post = postService.getPost(targetPostId);
+
+        PostDTO postDTO = PostDTO.builder()
+                .title(post.getTitle())
+                .title("title update")
+                .contents("contents update")
+                .build();
+
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postDTO)));
+
+        // then
+        perform
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("message").value("success"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    public void 게시물_삭제() throws Exception {
+        // given
+        Long targetPostId = 1L;
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/post/{id}", targetPostId));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("message").value("success"))
                 .andDo(print());
     }
 
