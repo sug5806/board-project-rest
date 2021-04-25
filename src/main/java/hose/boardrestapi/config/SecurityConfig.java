@@ -54,20 +54,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder managerBuilder) throws Exception {
         managerBuilder.authenticationProvider(userAuthenticationProvider);
     }
-
-//    private CustomUsernamePasswordAuthenticationFilter getAuthenticationFilter() {
-//        CustomUsernamePasswordAuthenticationFilter authenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
-//
-//        try {
-//            authenticationFilter.setFilterProcessesUrl("/login");
-//            authenticationFilter.setAuthenticationManager(authenticationManagerBean());
-//            authenticationFilter.setUsernameParameter("email");
-//            authenticationFilter.setPasswordParameter("password");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return authenticationFilter;
-//    }
-
 }
