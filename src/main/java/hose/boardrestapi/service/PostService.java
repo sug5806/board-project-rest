@@ -36,12 +36,9 @@ public class PostService {
 
         Post savePost = postRepository.save(post);
 
-        PostDTO postDTOResponse = PostDTO.builder()
+        return PostDTO.builder()
                 .id(savePost.getId())
                 .build();
-
-
-        return postDTOResponse;
     }
 
     public PostDTO updatePost(Long postId, PostDTO postDTO) {

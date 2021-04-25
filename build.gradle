@@ -28,7 +28,16 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    // test용 assertj 추가
     testCompile 'org.assertj:assertj-core:3.19.0'
+
+    // spring security 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // jwt
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 }
 
 test {
