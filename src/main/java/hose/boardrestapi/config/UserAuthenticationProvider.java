@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,11 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         UserDetails userDetails = userService.loadUserByUsername(email);
 
         if (!checkPassword(password, userDetails.getPassword()) || !userDetails.isEnabled()) {
-            throw new BadCredentialsException(email);
+            throw new BadCredentialsException("아이디나 비밀번호를 확인해주세요.");
+        }
+
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("계정이 존재하지 않습니다.");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

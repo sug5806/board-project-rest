@@ -5,6 +5,8 @@ import hose.boardrestapi.util.response.error.CustomError;
 import hose.boardrestapi.util.response.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,6 +50,34 @@ public class GlobalErrorHandlerController {
                     .build();
             errorResponse.addError(customError);
         }
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse badCredential(BadCredentialsException credentialsException) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("bad_request")
+                .build();
+
+        errorResponse.addError(CustomError.builder()
+                .message(credentialsException.getMessage())
+                .build());
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse usernameNotFound(UsernameNotFoundException usernameNotFoundException) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("bad_request")
+                .build();
+
+        errorResponse.addError(CustomError.builder()
+                .message(usernameNotFoundException.getMessage())
+                .build());
 
         return errorResponse;
     }
