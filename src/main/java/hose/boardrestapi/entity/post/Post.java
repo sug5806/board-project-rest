@@ -1,11 +1,8 @@
-package hose.boardrestapi.entity;
+package hose.boardrestapi.entity.post;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,11 +21,20 @@ public class Post {
 
     private LocalDateTime createAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_category_id")
+    private PostCategory category;
+
     public void changeTitle(String title) {
         this.title = title;
     }
 
     public void changeContents(String contents) {
         this.contents = contents;
+    }
+
+    public void mappingCategory(PostCategory postCategory) {
+        this.category = postCategory;
+        postCategory.mappingPost(this);
     }
 }

@@ -50,7 +50,7 @@ class UserControllerTest {
         UserDTO userDTO = initUserDTO();
 
         // when
-        ResultActions perform = mockMvc.perform(post("/user")
+        ResultActions perform = mockMvc.perform(post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -72,7 +72,7 @@ class UserControllerTest {
         userDTO.setEmail("email");
 
         // when
-        ResultActions perform = mockMvc.perform(post("/user")
+        ResultActions perform = mockMvc.perform(post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -95,7 +95,7 @@ class UserControllerTest {
         userDTO.setEmail("");
 
         // when
-        ResultActions perform = mockMvc.perform(post("/user")
+        ResultActions perform = mockMvc.perform(post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -118,7 +118,7 @@ class UserControllerTest {
         userDTO.setPassword("");
 
         // when
-        ResultActions perform = mockMvc.perform(post("/user")
+        ResultActions perform = mockMvc.perform(post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -141,7 +141,7 @@ class UserControllerTest {
         userDTO.setNickname("");
 
         // when
-        ResultActions perform = mockMvc.perform(post("/user")
+        ResultActions perform = mockMvc.perform(post("/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 

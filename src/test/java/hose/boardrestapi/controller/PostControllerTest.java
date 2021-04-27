@@ -1,7 +1,9 @@
 package hose.boardrestapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hose.boardrestapi.dto.PostDTO;
+import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.post.PostCategory;
+import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.service.PostService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.Cookie;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -35,11 +39,30 @@ class PostControllerTest {
     @Autowired
     private PostService postService;
 
+    private static Cookie cookie;
+    @Autowired
+    private PostCategoryRepository postCategoryRepository;
+
+    @BeforeAll
+    static void initCookie() {
+        cookie = new Cookie("cookie", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQHVzZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYxOTU3ODM3MX0.ihi0Pk4zzMJ3m12jyfw2qPIIB9XWZ2mUviJQpDc_z9XFtmkTSYPu0MjyqEeiNoFV6G0bl8oe-XtQ5mQSA3dCLw");
+    }
+
     public PostDTO initPostDTO() {
         return PostDTO.builder()
                 .title("title")
                 .contents("contents")
+                .category("free")
                 .build();
+    }
+
+    void initPostCategory() {
+        PostCategory build = PostCategory.builder()
+                .name("free")
+                .value("자유")
+                .build();
+
+        postCategoryRepository.save(build);
     }
 
     @Test
@@ -47,10 +70,12 @@ class PostControllerTest {
     @Order(1)
     public void createPost() throws Exception {
         // given
+        initPostCategory();
         PostDTO postDTO = initPostDTO();
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/post")
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -75,7 +100,7 @@ class PostControllerTest {
         postService.createPost(postDTO);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/post/{id}", 1));
+        ResultActions perform = mockMvc.perform(get("/post/{id}", 1).cookie(cookie));
 
         // then
         perform
@@ -95,7 +120,7 @@ class PostControllerTest {
     @DisplayName("존재하지않는 게시물 가져오기")
     @Order(3)
     public void getPostFail() throws Exception {
-        mockMvc.perform(get("/post/{id}", 9999999))
+        mockMvc.perform(get("/post/{id}", 9999999).cookie(cookie))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").exists())
                 .andExpect(jsonPath("message").value("error"))
@@ -111,10 +136,12 @@ class PostControllerTest {
         // given
         PostDTO postDTO = PostDTO.builder()
                 .contents("contents")
+                .category("free")
                 .build();
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/post")
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -133,10 +160,12 @@ class PostControllerTest {
         // given
         PostDTO postDTO = PostDTO.builder()
                 .title("title")
+                .category("free")
                 .build();
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/post")
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -151,13 +180,14 @@ class PostControllerTest {
     }
 
     @Test
-    public void 게시물_내용_제목_입력안함() throws Exception {
+    public void 게시물_내용_제목_카테고리_입력안함() throws Exception {
         // given
         PostDTO postDTO = PostDTO.builder()
                 .build();
 
         //when
         ResultActions resultActions = mockMvc.perform(post("/post")
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -166,9 +196,9 @@ class PostControllerTest {
                 .andExpect(jsonPath("errors").exists())
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors").hasJsonPath())
-                .andExpect(jsonPath("errors", hasSize(2)))
-                .andExpect(jsonPath("errors[*].field", containsInAnyOrder("title", "contents")))
-                .andExpect(jsonPath("errors[*].message", containsInAnyOrder("제목을 입력해주세요.", "내용을 입력해주세요.")))
+                .andExpect(jsonPath("errors", hasSize(3)))
+                .andExpect(jsonPath("errors[*].field", containsInAnyOrder("title", "contents", "category")))
+                .andExpect(jsonPath("errors[*].message", containsInAnyOrder("제목을 입력해주세요.", "내용을 입력해주세요.", "카테고리를 선택해주세요.")))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
@@ -182,10 +212,12 @@ class PostControllerTest {
         PostDTO postDTO = PostDTO.builder()
                 .title("title update")
                 .contents(post.getContents())
+                .category("free")
                 .build();
 
         // when
         ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -207,11 +239,13 @@ class PostControllerTest {
         PostDTO postDTO = PostDTO.builder()
                 .title(post.getTitle())
                 .contents("contents update")
+                .category("free")
                 .build();
 
 
         // when
         ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -233,11 +267,13 @@ class PostControllerTest {
                 .title(post.getTitle())
                 .title("title update")
                 .contents("contents update")
+                .category("free")
                 .build();
 
 
         // when
         ResultActions perform = mockMvc.perform(put("/post/{id}", targetPostId)
+                .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -255,7 +291,7 @@ class PostControllerTest {
         Long targetPostId = 1L;
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/post/{id}", targetPostId));
+        ResultActions perform = mockMvc.perform(delete("/post/{id}", targetPostId).cookie(cookie));
 
         // then
         perform.andExpect(status().isOk())

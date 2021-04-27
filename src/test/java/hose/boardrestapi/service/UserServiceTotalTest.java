@@ -42,7 +42,6 @@ public class UserServiceTotalTest {
 
         // then
         assertThat(user.getEmail()).isEqualTo(userDTO.getEmail());
-        assertThat(user.getPassword()).isEqualTo(userDTO.getPassword());
         assertThat(user.getNickname()).isEqualTo(userDTO.getNickname());
     }
 

@@ -1,6 +1,6 @@
 package hose.boardrestapi.repository;
 
-import hose.boardrestapi.entity.Post;
+import hose.boardrestapi.entity.post.Post;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

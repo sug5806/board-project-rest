@@ -1,4 +1,4 @@
-package hose.boardrestapi.dto;
+package hose.boardrestapi.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -21,4 +21,7 @@ public class PostDTO {
     private Long viewCount;
 
     private String createdAt;
+
+    @NotBlank(message = "카테고리를 선택해주세요.")
+    private String category;
 }

@@ -1,13 +1,16 @@
 package hose.boardrestapi.controller;
 
-import hose.boardrestapi.dto.PostDTO;
+import hose.boardrestapi.dto.post.PostCategoryDTO;
+import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.service.PostService;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,4 +48,12 @@ public class PostController {
         return SuccessResponse.success(null);
     }
 
+    @GetMapping("/post-category")
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    public SuccessResponse<List<PostCategoryDTO>> postCategory() {
+        List<PostCategoryDTO> postCategoryDTOS = postService.postCategoryList();
+
+        return SuccessResponse.success(postCategoryDTOS);
+    }
 }

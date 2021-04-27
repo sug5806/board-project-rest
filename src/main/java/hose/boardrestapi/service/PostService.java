@@ -1,20 +1,30 @@
 package hose.boardrestapi.service;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
-import hose.boardrestapi.dto.PostDTO;
-import hose.boardrestapi.entity.Post;
+import hose.boardrestapi.dto.post.PostCategoryDTO;
+import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.post.Post;
+import hose.boardrestapi.entity.post.PostCategory;
+import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
     private final PostRepository postRepository;
+    private final PostCategoryRepository postCategoryRepository;
 
+    @Transactional(readOnly = true)
     public PostDTO getPost(Long postId) {
         Optional<Post> byId = postRepository.findById(postId);
 
@@ -24,6 +34,7 @@ public class PostService {
                 .id(findPost.getId())
                 .title(findPost.getTitle())
                 .contents(findPost.getContents())
+                .category(findPost.getCategory().getName())
                 .build();
     }
 
@@ -31,6 +42,7 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
+                .category(postCategoryRepository.findByName(postDTO.getCategory()))
                 .createAt(LocalDateTime.now())
                 .build();
 
@@ -58,5 +70,14 @@ public class PostService {
         Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
 
         postRepository.delete(post);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostCategoryDTO> postCategoryList() {
+        List<PostCategory> postCategoryList = postCategoryRepository.findAll();
+
+        Stream<PostCategory> stream = postCategoryList.stream();
+
+        return stream.map(PostCategoryDTO::ConvertToPostCategoryDTO).collect(Collectors.toList());
     }
 }

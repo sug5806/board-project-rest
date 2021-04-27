@@ -1,8 +1,10 @@
 package hose.boardrestapi.service;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
-import hose.boardrestapi.dto.PostDTO;
-import hose.boardrestapi.entity.Post;
+import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.post.Post;
+import hose.boardrestapi.entity.post.PostCategory;
+import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.repository.PostRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,23 @@ public class PostServiceTotalTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private PostCategoryRepository postCategoryRepository;
+
+    void initPostCategory() {
+        PostCategory build = PostCategory.builder()
+                .name("free")
+                .value("자유")
+                .build();
+
+        postCategoryRepository.save(build);
+    }
+
     public PostDTO initPostDTO() {
         return PostDTO.builder()
                 .title("title")
                 .contents("contents")
+                .category("free")
                 .build();
     }
 
@@ -45,6 +60,7 @@ public class PostServiceTotalTest {
     @Order(1)
     public void createPost() throws Exception {
         //given
+        initPostCategory();
         PostDTO postDTO = initPostDTO();
 
         // when
