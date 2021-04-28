@@ -39,6 +39,7 @@ dependencies {
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+    // swagger
     compile('io.springfox:springfox-swagger2:2.7.0')
     compile('io.springfox:springfox-swagger-ui:2.7.0')
 }
