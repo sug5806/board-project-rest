@@ -7,6 +7,8 @@ import hose.boardrestapi.entity.User;
 import hose.boardrestapi.jwt.TokenProvider;
 import hose.boardrestapi.service.UserService;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,11 +28,13 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Api(value = "유저 API")
 public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
+    @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SuccessResponse<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
@@ -41,6 +45,7 @@ public class UserController {
                 .build());
     }
 
+    @ApiOperation(value = "로그인")
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<TokenDTO>> login(@RequestBody @Valid LoginDTO loginDTO, HttpServletResponse response) {
 
@@ -59,8 +64,6 @@ public class UserController {
         response.addCookie(myCookie);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
-//        httpHeaders.set
 
         SuccessResponse<TokenDTO> successResponse = SuccessResponse.success(TokenDTO.builder().token(token).build());
 

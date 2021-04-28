@@ -87,7 +87,8 @@ class PostControllerTest {
                 .andExpect(jsonPath("message").value("success"))
                 .andExpect(jsonPath("data.id").value(1))
                 .andExpect(status().isCreated())
-                .andDo(print());
+                .andDo(print())
+        ;
     }
 
     @Test
