@@ -72,7 +72,7 @@ public class GlobalErrorHandlerController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse usernameNotFound(UsernameNotFoundException usernameNotFoundException) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("bad_request")
+                .message("error")
                 .build();
 
         errorResponse.addError(CustomError.builder()

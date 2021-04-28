@@ -61,7 +61,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("message").value("success"))
                 .andExpect(jsonPath("data").hasJsonPath())
                 .andExpect(jsonPath("data.id").exists())
-                .andExpect(jsonPath("data.id").value(1L))
                 .andDo(print());
     }
 

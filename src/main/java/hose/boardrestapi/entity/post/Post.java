@@ -1,5 +1,6 @@
 package hose.boardrestapi.entity.post;
 
+import hose.boardrestapi.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +33,12 @@ public class Post {
         this.viewCount += 1;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -43,5 +50,10 @@ public class Post {
     public void mappingCategory(PostCategory postCategory) {
         this.category = postCategory;
         postCategory.mappingPost(this);
+    }
+
+    public void mappingUser(User user) {
+        this.user = user;
+        user.mappingPost(this);
     }
 }
