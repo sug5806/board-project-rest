@@ -32,6 +32,7 @@ public class PostController {
     @PostMapping("/post")
     @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 생성", notes = "게시물을 생성합니다.")
     public SuccessResponse<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
         PostDTO post = postService.createPost(postDTO);
 
@@ -41,6 +42,7 @@ public class PostController {
     @PutMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
     public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable(name = "id") Long postId) {
         PostDTO postDTOResponse = postService.updatePost(postId, postDTO);
 
@@ -50,6 +52,7 @@ public class PostController {
     @DeleteMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
     public SuccessResponse<String> deletePost(@PathVariable(name = "id") Long postId) {
         postService.deletePost(postId);
         return SuccessResponse.success(null);
@@ -58,6 +61,7 @@ public class PostController {
     @GetMapping("/post-category")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 카테고리 조회", notes = "게시물 카테고리를 조회합니다.")
     public SuccessResponse<List<PostCategoryDTO>> postCategory() {
         List<PostCategoryDTO> postCategoryDTOS = postService.postCategoryList();
 

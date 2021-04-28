@@ -24,11 +24,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCategoryRepository postCategoryRepository;
 
-    @Transactional(readOnly = true)
+
     public PostDTO getPost(Long postId) {
         Optional<Post> byId = postRepository.findById(postId);
 
         Post findPost = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+
+        findPost.addViewCount();
 
         return PostDTO.builder()
                 .id(findPost.getId())
@@ -42,9 +44,10 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
-                .category(postCategoryRepository.findByName(postDTO.getCategory()))
                 .createAt(LocalDateTime.now())
                 .build();
+
+        post.mappingCategory(postCategoryRepository.findByName(postDTO.getCategory()));
 
         Post savePost = postRepository.save(post);
 

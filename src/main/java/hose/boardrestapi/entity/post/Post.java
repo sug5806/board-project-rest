@@ -25,6 +25,13 @@ public class Post {
     @JoinColumn(name = "post_category_id")
     private PostCategory category;
 
+    @Builder.Default
+    private Long viewCount = 0L;
+
+    public void addViewCount() {
+        this.viewCount += 1;
+    }
+
     public void changeTitle(String title) {
         this.title = title;
     }
