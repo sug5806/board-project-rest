@@ -1,6 +1,7 @@
 package hose.boardrestapi.service;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
+import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,14 +23,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @EnableAutoConfiguration
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PostServiceTotalTest {
+    private static final String userEmail = "user@user.com";
+
     @Autowired
     private PostService postService;
 
     @Autowired
     private PostRepository postRepository;
+    private static Cookie cookie;
 
     @Autowired
     private PostCategoryRepository postCategoryRepository;
+    @Autowired
+    private UserService userService;
+
+    @BeforeAll
+    static void initCookie() {
+        cookie = new Cookie("cookie", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQHVzZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYxOTY3OTcxM30.RQfAsaGr1cq2c6PWBSKCy1y9TbcDg3wl9SGakRRNzrb5wP4O00Fd8Y-rQ5wz3LjIEd8iMcrjR_mws_DN8HARbw");
+    }
 
     void initPostCategory() {
         PostCategory build = PostCategory.builder()
@@ -63,8 +75,14 @@ public class PostServiceTotalTest {
         initPostCategory();
         PostDTO postDTO = initPostDTO();
 
+        userService.createUser(UserDTO.builder()
+                .email(userEmail)
+                .password("1234")
+                .nickname("nickname")
+                .build());
+
         // when
-        PostDTO post1 = postService.createPost(postDTO);
+        PostDTO post1 = postService.createPost(postDTO, userEmail);
 
         // then
         assertThat(post1.getId()).isEqualTo(1L);

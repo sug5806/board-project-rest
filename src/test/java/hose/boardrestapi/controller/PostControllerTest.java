@@ -1,10 +1,12 @@
 package hose.boardrestapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.service.PostService;
+import hose.boardrestapi.service.UserService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PostControllerTest {
+    private static final String userEmail = "user@user.com";
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -39,13 +43,17 @@ class PostControllerTest {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UserService userService;
+
     private static Cookie cookie;
+
     @Autowired
     private PostCategoryRepository postCategoryRepository;
 
     @BeforeAll
     static void initCookie() {
-        cookie = new Cookie("cookie", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQHVzZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYxOTU3ODM3MX0.ihi0Pk4zzMJ3m12jyfw2qPIIB9XWZ2mUviJQpDc_z9XFtmkTSYPu0MjyqEeiNoFV6G0bl8oe-XtQ5mQSA3dCLw");
+        cookie = new Cookie("cookie", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQHVzZXIuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYxOTY3OTcxM30.RQfAsaGr1cq2c6PWBSKCy1y9TbcDg3wl9SGakRRNzrb5wP4O00Fd8Y-rQ5wz3LjIEd8iMcrjR_mws_DN8HARbw");
     }
 
     public PostDTO initPostDTO() {
@@ -73,6 +81,13 @@ class PostControllerTest {
         initPostCategory();
         PostDTO postDTO = initPostDTO();
 
+        userService.createUser(UserDTO.builder()
+                .email(userEmail)
+                .password("1234")
+                .nickname("nickname")
+                .build());
+
+
         //when
         ResultActions resultActions = mockMvc.perform(post("/post")
                 .cookie(cookie)
@@ -98,7 +113,7 @@ class PostControllerTest {
     public void getPostSuccess() throws Exception {
         // given
         PostDTO postDTO = initPostDTO();
-        postService.createPost(postDTO);
+        postService.createPost(postDTO, userEmail);
 
         // when
         ResultActions perform = mockMvc.perform(get("/post/{id}", 1).cookie(cookie));

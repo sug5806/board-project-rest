@@ -3,11 +3,14 @@ package hose.boardrestapi.service;
 import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.User;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.repository.PostRepository;
+import hose.boardrestapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.stream.Stream;
 @Transactional
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final PostCategoryRepository postCategoryRepository;
 
     @Transactional(readOnly = true)
@@ -38,13 +42,19 @@ public class PostService {
                 .build();
     }
 
-    public PostDTO createPost(PostDTO postDTO) {
+    public PostDTO createPost(PostDTO postDTO, String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+
+        User user = byEmail.orElseThrow(() -> new UsernameNotFoundException("게시글 작성 권한이 없습니다."));
+
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
-                .category(postCategoryRepository.findByName(postDTO.getCategory()))
                 .createAt(LocalDateTime.now())
                 .build();
+
+        post.mappingCategory(postCategoryRepository.findByName(postDTO.getCategory()));
+        post.mappingUser(user);
 
         Post savePost = postRepository.save(post);
 

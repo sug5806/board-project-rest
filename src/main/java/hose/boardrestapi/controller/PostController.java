@@ -7,16 +7,19 @@ import hose.boardrestapi.util.response.sucess.SuccessResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Api(tags = {"게시물 관련 API"})
+@Slf4j
 public class PostController {
     private final PostService postService;
 
@@ -32,8 +35,10 @@ public class PostController {
     @PostMapping("/post")
     @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated()")
-    public SuccessResponse<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO) {
-        PostDTO post = postService.createPost(postDTO);
+    @ApiOperation(value = "게시물 생성", notes = "게시물을 생성합니다.")
+    public SuccessResponse<PostDTO> createPost(@Valid @RequestBody PostDTO postDTO, Principal principal) {
+        log.info(principal.getName());
+        PostDTO post = postService.createPost(postDTO, principal.getName());
 
         return SuccessResponse.success(post);
     }
@@ -41,6 +46,7 @@ public class PostController {
     @PutMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
     public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable(name = "id") Long postId) {
         PostDTO postDTOResponse = postService.updatePost(postId, postDTO);
 
@@ -50,6 +56,7 @@ public class PostController {
     @DeleteMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
     public SuccessResponse<String> deletePost(@PathVariable(name = "id") Long postId) {
         postService.deletePost(postId);
         return SuccessResponse.success(null);

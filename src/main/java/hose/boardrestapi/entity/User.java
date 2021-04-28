@@ -1,19 +1,15 @@
 package hose.boardrestapi.entity;
 
+import hose.boardrestapi.entity.post.Post;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Builder
@@ -40,10 +36,21 @@ public class User implements UserDetails {
 
     private boolean enabled = true;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Post> postList = new ArrayList<>();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public void encryptPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    public void mappingPost(Post post) {
+        postList.add(post);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> auth = new HashSet<>();
@@ -76,5 +83,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 
 }
