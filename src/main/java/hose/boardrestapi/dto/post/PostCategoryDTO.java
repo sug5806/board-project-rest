@@ -15,7 +15,7 @@ public class PostCategoryDTO {
     private String name;
     private String value;
 
-    public static PostCategoryDTO ConvertToPostCategoryDTO(PostCategory postCategory) {
+    public static PostCategoryDTO convertToPostCategoryDTO(PostCategory postCategory) {
         return PostCategoryDTO.builder()
                 .id(postCategory.getId())
                 .name(postCategory.getName())

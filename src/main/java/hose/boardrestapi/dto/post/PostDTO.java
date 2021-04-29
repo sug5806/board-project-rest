@@ -2,6 +2,7 @@ package hose.boardrestapi.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import hose.boardrestapi.dto.UserDTO;
+import hose.boardrestapi.entity.post.Post;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -27,4 +28,16 @@ public class PostDTO {
     private String category;
 
     private UserDTO user;
+
+    public static PostDTO convertToPostDTO(Post post) {
+        return PostDTO.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .contents(post.getContents())
+                .createdAt(post.getCreateAt().toString())
+                .viewCount(post.getViewCount())
+                .user(UserDTO.convertToUserDTO(post.getUser()))
+                .category(PostCategoryDTO.convertToPostCategoryDTO(post.getCategory()).getName())
+                .build();
+    }
 }

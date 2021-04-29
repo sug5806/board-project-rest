@@ -1,6 +1,7 @@
 package hose.boardrestapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import hose.boardrestapi.entity.User;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -26,4 +27,12 @@ public class UserDTO {
     private String nickname;
 
     private LocalDateTime createdBy;
+
+    public static UserDTO convertToUserDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .build();
+    }
 }

@@ -11,6 +11,7 @@ import hose.boardrestapi.repository.PostCategoryRepository;
 import hose.boardrestapi.repository.PostRepository;
 import hose.boardrestapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,6 +97,15 @@ public class PostService {
 
         Stream<PostCategory> stream = postCategoryList.stream();
 
-        return stream.map(PostCategoryDTO::ConvertToPostCategoryDTO).collect(Collectors.toList());
+        return stream.map(PostCategoryDTO::convertToPostCategoryDTO).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostDTO> getPostList() {
+        List<Post> all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createAt"));
+
+        Stream<Post> stream = all.stream();
+
+        return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
     }
 }

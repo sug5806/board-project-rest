@@ -23,6 +23,15 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    @GetMapping("/posts")
+    @ResponseStatus(value = HttpStatus.OK)
+    @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
+    public SuccessResponse<List<PostDTO>> getPostList() {
+        List<PostDTO> postList = postService.getPostList();
+
+        return SuccessResponse.success(postList);
+    }
+
     @GetMapping("post/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "게시물 조회", notes = "게시물을 조회합니다.")
