@@ -6,6 +6,8 @@ import hose.boardrestapi.entity.post.Post;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,6 +15,12 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostDTO {
+    private static final int SEC = 60;
+    private static final int MIN = 60;
+    private static final int HOUR = 24;
+    private static final int DAY = 30;
+    private static final int MONTH = 12;
+
     private Long id;
 
     @NotBlank(message = "제목을 입력해주세요.")
@@ -34,10 +42,33 @@ public class PostDTO {
                 .id(post.getId())
                 .title(post.getTitle())
                 .contents(post.getContents())
-                .createdAt(post.getCreateAt().toString())
+                .createdAt(formatTimeString(post.getCreateAt()))
                 .viewCount(post.getViewCount())
                 .user(UserDTO.convertToUserDTO(post.getUser()))
                 .category(PostCategoryDTO.convertToPostCategoryDTO(post.getCategory()).getName())
                 .build();
+    }
+
+    private static String formatTimeString(LocalDateTime time) {
+        String msg;
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        long seconds = Duration.between(time, currentTime).getSeconds();
+
+        if (seconds < SEC) {
+            msg = seconds + "초 전";
+        } else if (seconds / SEC < MIN) {
+            msg = seconds / SEC + "분 전";
+        } else if (seconds / (SEC * MIN) < HOUR) {
+            msg = seconds / (SEC * MIN) + "시간 전";
+        } else if (seconds / (SEC * MIN * HOUR) < DAY) {
+            msg = seconds / (SEC * MIN * HOUR) + "일 전";
+        } else if (seconds / (SEC * MIN * HOUR * MONTH) < MONTH) {
+            msg = seconds / (SEC * MIN * HOUR * MONTH) + "개월 전";
+        } else {
+            msg = seconds / (SEC * MIN * HOUR * MONTH) + "년 전";
+        }
+
+        return msg;
     }
 }
