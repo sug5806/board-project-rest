@@ -42,6 +42,7 @@ public class PostService {
                 .title(findPost.getTitle())
                 .contents(findPost.getContents())
                 .category(findPost.getCategory().getName())
+                .viewCount(findPost.getViewCount())
                 .user(UserDTO.builder()
                         .id(findPost.getUser().getId())
                         .nickname(findPost.getUser().getNickname())
