@@ -10,11 +10,10 @@ import hose.boardrestapi.entity.User;
 import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
-import hose.boardrestapi.repository.PostCategoryRepository;
-import hose.boardrestapi.repository.PostRepository;
 import hose.boardrestapi.repository.UserRepository;
+import hose.boardrestapi.repository.post.PostCategoryRepository;
+import hose.boardrestapi.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -115,17 +114,21 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostDTO> getPostList(SearchDTO searchDTO) {
-        List<Post> all;
-        String postCategory = searchDTO.getCategory();
+//        List<Post> all;
+//        String postCategory = searchDTO.getCategory();
+//
+//        if (postCategory.equals("")) {
+//            all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "date.createdAt"));
+//        } else {
+//            PostCategory findPostCategory = postCategoryRepository.findByName(postCategory);
+//            all = postRepository.findAllByCategory(findPostCategory, Sort.by(Sort.Direction.DESC, "date.createdAt"));
+//        }
+//
+//        Stream<Post> stream = all.stream();
+//
+//        return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
 
-        if (postCategory.equals("")) {
-            all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "date.createdAt"));
-        } else {
-            PostCategory findPostCategory = postCategoryRepository.findByName(postCategory);
-            all = postRepository.findAllByCategory(findPostCategory, Sort.by(Sort.Direction.DESC, "date.createdAt"));
-        }
-
-        Stream<Post> stream = all.stream();
+        Stream<Post> stream = postRepository.postListQueryDSL(searchDTO).stream();
 
         return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
     }

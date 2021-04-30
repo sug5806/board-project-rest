@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.PostCategory;
-import hose.boardrestapi.repository.PostCategoryRepository;
+import hose.boardrestapi.repository.post.PostCategoryRepository;
 import hose.boardrestapi.service.PostService;
 import hose.boardrestapi.service.UserService;
 import org.junit.jupiter.api.*;

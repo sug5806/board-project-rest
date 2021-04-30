@@ -8,10 +8,12 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class SearchDTO {
-    private String category = "free";
+    @JsonProperty
+    private String category;
 
     @JsonProperty("search_type")
     private String searchType = "title";
 
-    private String query = "";
+    @JsonProperty
+    private String query;
 }

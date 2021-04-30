@@ -1,4 +1,4 @@
-package hose.boardrestapi.repository;
+package hose.boardrestapi.repository.post;
 
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     @EntityGraph(attributePaths = {"category", "user", "commentList.user"})
     @Override
     Optional<Post> findById(Long postId);

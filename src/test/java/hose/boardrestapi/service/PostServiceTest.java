@@ -2,7 +2,7 @@ package hose.boardrestapi.service;
 
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.Post;
-import hose.boardrestapi.repository.PostRepository;
+import hose.boardrestapi.repository.post.PostRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
