@@ -1,19 +1,21 @@
 package hose.boardrestapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+
+import java.beans.ConstructorProperties;
 
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class SearchDTO {
-    @JsonProperty
     private String category;
-
-    @JsonProperty("search_type")
-    private String searchType = "title";
-
-    @JsonProperty
+    private String searchType;
     private String query;
+
+    @ConstructorProperties({"category", "search_type", "query"})
+    public SearchDTO(String category, String searchType, String query) {
+        this.category = category;
+        this.searchType = searchType;
+        this.query = query;
+    }
 }

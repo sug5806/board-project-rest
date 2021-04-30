@@ -114,20 +114,6 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostDTO> getPostList(SearchDTO searchDTO) {
-//        List<Post> all;
-//        String postCategory = searchDTO.getCategory();
-//
-//        if (postCategory.equals("")) {
-//            all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "date.createdAt"));
-//        } else {
-//            PostCategory findPostCategory = postCategoryRepository.findByName(postCategory);
-//            all = postRepository.findAllByCategory(findPostCategory, Sort.by(Sort.Direction.DESC, "date.createdAt"));
-//        }
-//
-//        Stream<Post> stream = all.stream();
-//
-//        return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
-
         Stream<Post> stream = postRepository.postListQueryDSL(searchDTO).stream();
 
         return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());

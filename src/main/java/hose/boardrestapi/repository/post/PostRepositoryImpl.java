@@ -21,28 +21,40 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     @Override
     public List<Post> postListQueryDSL(SearchDTO searchDTO) {
-        BooleanExpression postCategoryQuery = getPostCategoryQuery(searchDTO.getCategory());
+        BooleanExpression postCategoryQuery = postCategoryQuery(searchDTO.getCategory());
+        BooleanExpression postSearchQuery = postSearchQuery(searchDTO);
 
-        List<Post> postList = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(post)
-                .where(postCategoryQuery)
+                .where(postCategoryQuery, postSearchQuery)
                 .join(post.user, user).fetchJoin()
                 .join(post.category, postCategory).fetchJoin()
                 .fetch();
-
-        return postList;
     }
 
-    private BooleanExpression getPostCategoryQuery(String category) {
+    private BooleanExpression postCategoryQuery(String category) {
         if (StringUtils.hasLength(category)) {
-            PostCategory findPostCategory = jpaQueryFactory
-                    .selectFrom(postCategory)
-                    .where(postCategory.name.eq(category))
-                    .fetchOne();
-
-            return post.category.eq(findPostCategory);
+            return post.category.eq(getPostCategory(category));
         }
 
         return null;
     }
+
+    private BooleanExpression postSearchQuery(SearchDTO searchDTO) {
+        if (searchDTO.getSearchType().equals("user")) {
+            return user.nickname.eq(searchDTO.getQuery());
+        }
+
+        // post title
+        return post.title.contains(searchDTO.getQuery());
+    }
+
+    private PostCategory getPostCategory(String category) {
+        return jpaQueryFactory
+                .selectFrom(postCategory)
+                .where(postCategory.name.eq(category))
+                .fetchOne();
+    }
+
+
 }
