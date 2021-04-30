@@ -1,6 +1,7 @@
 package hose.boardrestapi.repository;
 
 import hose.boardrestapi.entity.post.Post;
+import hose.boardrestapi.entity.post.PostCategory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @EntityGraph(attributePaths = {"user", "category"})
     @Override
     List<Post> findAll(Sort sort);
+
+    @EntityGraph(attributePaths = {"user", "category"})
+    List<Post> findAllByCategory(PostCategory postCategory, Sort sort);
 }

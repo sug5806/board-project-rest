@@ -1,5 +1,6 @@
 package hose.boardrestapi.controller;
 
+import hose.boardrestapi.dto.SearchDTO;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.service.PostService;
@@ -23,11 +24,13 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/posts")
+    @GetMapping("/board/post-list")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
-    public SuccessResponse<List<PostDTO>> getPostList() {
-        List<PostDTO> postList = postService.getPostList();
+    public SuccessResponse<List<PostDTO>> getPostList(
+            SearchDTO searchDTO
+    ) {
+        List<PostDTO> postList = postService.getPostList(searchDTO);
 
         return SuccessResponse.success(postList);
     }

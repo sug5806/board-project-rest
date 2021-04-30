@@ -2,6 +2,7 @@ package hose.boardrestapi.service;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.dto.CommentDTO;
+import hose.boardrestapi.dto.SearchDTO;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
@@ -113,8 +114,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostDTO> getPostList() {
-        List<Post> all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createAt"));
+    public List<PostDTO> getPostList(SearchDTO searchDTO) {
+        List<Post> all;
+        String postCategory = searchDTO.getCategory();
+
+        if (postCategory.equals("")) {
+            all = postRepository.findAll(Sort.by(Sort.Direction.DESC, "date.createdAt"));
+        } else {
+            PostCategory findPostCategory = postCategoryRepository.findByName(postCategory);
+            all = postRepository.findAllByCategory(findPostCategory, Sort.by(Sort.Direction.DESC, "date.createdAt"));
+        }
 
         Stream<Post> stream = all.stream();
 
