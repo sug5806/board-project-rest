@@ -5,6 +5,7 @@ import hose.boardrestapi.util.response.error.CustomError;
 import hose.boardrestapi.util.response.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -77,6 +78,20 @@ public class GlobalErrorHandlerController {
 
         errorResponse.addError(CustomError.builder()
                 .message(usernameNotFoundException.getMessage())
+                .build());
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(AuthorizationServiceException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorResponse usernameNotFound(AuthorizationServiceException authorizationServiceException) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("forbidden")
+                .build();
+
+        errorResponse.addError(CustomError.builder()
+                .message(authorizationServiceException.getMessage())
                 .build());
 
         return errorResponse;

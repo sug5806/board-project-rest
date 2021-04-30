@@ -56,8 +56,10 @@ public class PostController {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "게시물 수정", notes = "게시물을 수정합니다.")
-    public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable(name = "id") Long postId) {
-        PostDTO postDTOResponse = postService.updatePost(postId, postDTO);
+    public SuccessResponse<PostDTO> updatePost(@Valid @RequestBody PostDTO postDTO,
+                                               @PathVariable(name = "id") Long postId,
+                                               Principal principal) {
+        PostDTO postDTOResponse = postService.updatePost(postId, postDTO, principal.getName());
 
         return SuccessResponse.success(postDTOResponse);
     }
@@ -66,8 +68,9 @@ public class PostController {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "게시물 삭제", notes = "게시물을 삭제합니다.")
-    public SuccessResponse<String> deletePost(@PathVariable(name = "id") Long postId) {
-        postService.deletePost(postId);
+    public SuccessResponse<String> deletePost(@PathVariable(name = "id") Long postId,
+                                              Principal principal) {
+        postService.deletePost(postId, principal.getName());
         return SuccessResponse.success(null);
     }
 

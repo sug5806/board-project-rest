@@ -43,9 +43,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (cookie.getName().equals("cookie")) {
                     return cookie.getValue();
                 }
-
-                return null;
-
             }
         }
 

@@ -31,7 +31,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                     .build();
 
             errorResponse.addError(CustomError.builder()
-                    .message("권한이 없습니다.")
+                    .message("로그인이 필요한 서비스입니다.")
                     .build());
 
             ObjectMapper objectMapper = new ObjectMapper();

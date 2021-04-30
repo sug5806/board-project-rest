@@ -26,11 +26,6 @@ public class CommentDTO {
                 .id(comment.getId())
                 .contents(comment.getContents())
                 .user(UserDTO.convertToUserDTO(comment.getUser()))
-//                .user(UserDTO.builder()
-//                        .id(comment.getUser().getId())
-//                        .email(comment.getUser().getEmail())
-//                        .nickname(comment.getUser().getNickname())
-//                        .build())
                 .build();
     }
 

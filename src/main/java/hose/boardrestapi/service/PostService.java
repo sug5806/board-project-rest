@@ -6,6 +6,7 @@ import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.User;
+import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.PostCategoryRepository;
@@ -13,6 +14,7 @@ import hose.boardrestapi.repository.PostRepository;
 import hose.boardrestapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostCategoryRepository postCategoryRepository;
-
 
     public PostDTO getPost(Long postId) {
         Optional<Post> byId = postRepository.findById(postId);
@@ -58,7 +59,9 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
-                .createAt(LocalDateTime.now())
+                .date(Date.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build())
                 .build();
 
         post.mappingCategory(postCategoryRepository.findByName(postDTO.getCategory()));
@@ -71,23 +74,33 @@ public class PostService {
                 .build();
     }
 
-    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+    public PostDTO updatePost(Long postId, PostDTO postDTO, String email) {
         Optional<Post> byId = postRepository.findById(postId);
         Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
 
-        post.changeTitle(postDTO.getTitle());
-        post.changeContents(postDTO.getContents());
+        if (post.getUser().getEmail().equals(email)) {
+            post.changeTitle(postDTO.getTitle());
+            post.changeContents(postDTO.getContents());
+            post.getDate().changeUpdatedAt(LocalDateTime.now());
 
-        return PostDTO.builder()
-                .id(post.getId())
-                .build();
+            return PostDTO.builder()
+                    .id(post.getId())
+                    .build();
+        } else {
+            throw new AuthorizationServiceException("권한이 없습니다.");
+        }
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, String email) {
         Optional<Post> byId = postRepository.findById(postId);
         Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
 
-        postRepository.delete(post);
+
+        if (post.getUser().getEmail().equals(email)) {
+            postRepository.delete(post);
+        } else {
+            throw new AuthorizationServiceException("권한이 없습니다.");
+        }
     }
 
     @Transactional(readOnly = true)

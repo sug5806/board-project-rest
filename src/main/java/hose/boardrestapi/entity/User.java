@@ -37,10 +37,10 @@ public class User implements UserDetails {
     @Builder.Default
     private boolean enabled = true;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Post> postList = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +91,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
-
-
 }

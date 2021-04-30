@@ -1,5 +1,6 @@
 package hose.boardrestapi.entity;
 
+import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,9 @@ public class Comment {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_comment"))
     private User user;
 
+    @Embedded
+    private Date date;
+
     public void mappingPostAndUser(Post post, User user) {
         this.post = post;
         this.user = user;
@@ -41,6 +45,4 @@ public class Comment {
         post.mappingComment(this);
         user.mappingComment(this);
     }
-
-
 }

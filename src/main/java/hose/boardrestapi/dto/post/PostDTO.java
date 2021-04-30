@@ -46,7 +46,7 @@ public class PostDTO {
                 .id(post.getId())
                 .title(post.getTitle())
                 .contents(post.getContents())
-                .createdAt(formatTimeString(post.getCreateAt()))
+                .createdAt(formatTimeString(post.getDate().getCreatedAt()))
                 .viewCount(post.getViewCount())
                 .user(UserDTO.convertToUserDTO(post.getUser()))
                 .category(PostCategoryDTO.convertToPostCategoryDTO(post.getCategory()).getName())

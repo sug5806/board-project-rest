@@ -2,13 +2,13 @@ package hose.boardrestapi.entity.post;
 
 import hose.boardrestapi.entity.Comment;
 import hose.boardrestapi.entity.User;
+import hose.boardrestapi.entity.common.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,8 @@ public class Post {
 
     private String contents;
 
-    private LocalDateTime createAt;
+    @Embedded
+    private Date date;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_category_id")
@@ -47,7 +48,7 @@ public class Post {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_post"))
     private User user;
 
-    @OneToMany(fetch = LAZY, mappedBy = "post")
+    @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
 

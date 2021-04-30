@@ -4,6 +4,7 @@ import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.dto.CommentDTO;
 import hose.boardrestapi.entity.Comment;
 import hose.boardrestapi.entity.User;
+import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.repository.CommentRepository;
 import hose.boardrestapi.repository.PostRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -36,6 +38,9 @@ public class CommentService {
 
         Comment comment = Comment.builder()
                 .contents(commentDTO.getContents())
+                .date(Date.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build())
                 .build();
 
         comment.mappingPostAndUser(post, user);
