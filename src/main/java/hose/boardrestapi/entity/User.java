@@ -34,10 +34,14 @@ public class User implements UserDetails {
 
     private String authority;
 
+    @Builder.Default
     private boolean enabled = true;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Comment> commentList = new ArrayList<>();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +51,10 @@ public class User implements UserDetails {
 
     public void mappingPost(Post post) {
         postList.add(post);
+    }
+
+    public void mappingComment(Comment comment) {
+        commentList.add(comment);
     }
 
 

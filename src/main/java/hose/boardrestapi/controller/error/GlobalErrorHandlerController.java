@@ -1,4 +1,4 @@
-package hose.boardrestapi.controller;
+package hose.boardrestapi.controller.error;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.util.response.error.CustomError;
@@ -24,7 +24,7 @@ public class GlobalErrorHandlerController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorResponse postNotFound(PostNotFound postNotFound) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("error")
+                .message("not_found")
                 .build();
 
         errorResponse.addError(CustomError.builder()
@@ -72,7 +72,7 @@ public class GlobalErrorHandlerController {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse usernameNotFound(UsernameNotFoundException usernameNotFoundException) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("error")
+                .message("bad_request")
                 .build();
 
         errorResponse.addError(CustomError.builder()

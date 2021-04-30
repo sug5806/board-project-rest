@@ -76,8 +76,8 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "게시물 카테고리 조회", notes = "게시물 카테고리를 조회합니다.")
     public SuccessResponse<List<PostCategoryDTO>> postCategory() {
-        List<PostCategoryDTO> postCategoryDTOS = postService.postCategoryList();
+        List<PostCategoryDTO> postCategoryDTOList = postService.postCategoryList();
 
-        return SuccessResponse.success(postCategoryDTOS);
+        return SuccessResponse.success(postCategoryDTOList);
     }
 }

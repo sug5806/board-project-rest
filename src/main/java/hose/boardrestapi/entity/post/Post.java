@@ -1,19 +1,29 @@
 package hose.boardrestapi.entity.post;
 
+import hose.boardrestapi.entity.Comment;
 import hose.boardrestapi.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PROTECTED)
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     private String title;
@@ -22,7 +32,7 @@ public class Post {
 
     private LocalDateTime createAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_category_id")
     private PostCategory category;
 
@@ -33,9 +43,13 @@ public class Post {
         this.viewCount += 1;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_post"))
     private User user;
+
+    @OneToMany(fetch = LAZY, mappedBy = "post")
+    private List<Comment> commentList = new ArrayList<>();
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,5 +69,9 @@ public class Post {
     public void mappingUser(User user) {
         this.user = user;
         user.mappingPost(this);
+    }
+
+    public void mappingComment(Comment comment) {
+        this.commentList.add(comment);
     }
 }

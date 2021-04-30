@@ -1,6 +1,7 @@
 package hose.boardrestapi.service;
 
 import hose.boardrestapi.common.custom_exception.PostNotFound;
+import hose.boardrestapi.dto.CommentDTO;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
@@ -44,10 +45,8 @@ public class PostService {
                 .contents(findPost.getContents())
                 .category(findPost.getCategory().getName())
                 .viewCount(findPost.getViewCount())
-                .user(UserDTO.builder()
-                        .id(findPost.getUser().getId())
-                        .nickname(findPost.getUser().getNickname())
-                        .build())
+                .user(UserDTO.convertToUserDTO(findPost.getUser()))
+                .commentList(CommentDTO.convertToCommentDtoList(findPost.getCommentList()))
                 .build();
     }
 

@@ -13,11 +13,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
     private String message;
+
     @Builder.Default
     private List<CustomError> errors = new ArrayList<>();
 
-    public List<CustomError> addError(CustomError error) {
+    public void addError(CustomError error) {
         this.errors.add(error);
-        return this.errors;
     }
 }

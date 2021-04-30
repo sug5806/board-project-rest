@@ -1,6 +1,7 @@
 package hose.boardrestapi.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import hose.boardrestapi.dto.CommentDTO;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.entity.post.Post;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +38,8 @@ public class PostDTO {
     private String category;
 
     private UserDTO user;
+
+    private List<CommentDTO> commentList;
 
     public static PostDTO convertToPostDTO(Post post) {
         return PostDTO.builder()
