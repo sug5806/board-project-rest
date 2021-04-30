@@ -27,9 +27,7 @@ public class PostController {
     @GetMapping("/board/post-list")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
-    public SuccessResponse<List<PostDTO>> getPostList(
-            SearchDTO searchDTO
-    ) {
+    public SuccessResponse<List<PostDTO>> getPostList(SearchDTO searchDTO) {
         List<PostDTO> postList = postService.getPostList(searchDTO);
 
         return SuccessResponse.success(postList);
