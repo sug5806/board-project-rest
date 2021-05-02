@@ -55,6 +55,4 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(postCategory.name.eq(category))
                 .fetchOne();
     }
-
-
 }
