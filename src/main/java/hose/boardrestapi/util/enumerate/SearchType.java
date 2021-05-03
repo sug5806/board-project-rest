@@ -16,9 +16,9 @@ public enum SearchType {
     @Getter
     private final String description;
 
-    public static SearchType convertToType(String type) {
+    public static SearchType convertToType(String stringType) {
         return Arrays.stream(values())
-                .filter(searchType -> searchType.type.equals(type))
+                .filter(searchType -> searchType.type.equals(stringType))
                 .findAny()
                 .orElse(TITLE);
     }
