@@ -16,6 +16,8 @@ import hose.boardrestapi.repository.post.PostLikeRepository;
 import hose.boardrestapi.repository.post.PostRepository;
 import hose.boardrestapi.util.custom_exception.PostNotFound;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -127,6 +129,13 @@ public class PostService {
         Stream<Post> stream = postRepository.postListQueryDSL(searchDTO).stream();
 
         return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostDTO> getPostListPaging(SearchDTO searchDTO, Pageable pageable) {
+        Page<Post> posts = postRepository.postListPagingQueryDSL(searchDTO, pageable);
+
+        return posts.map(PostDTO::convertToPostDTO);
     }
 
     public void postLike(Long postId, String email) {

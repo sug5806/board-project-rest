@@ -4,11 +4,13 @@ import hose.boardrestapi.dto.SearchDTO;
 import hose.boardrestapi.dto.post.PostCategoryDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.service.PostService;
+import hose.boardrestapi.util.paging.PageRequestCustom;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +26,22 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+//    @GetMapping("/board/post-list")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
+//    public SuccessResponse<List<PostDTO>> getPostList(SearchDTO searchDTO) {
+//        List<PostDTO> postList = postService.getPostList(searchDTO);
+//
+//        return SuccessResponse.success(postList);
+//    }
+
     @GetMapping("/board/post-list")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "게시물 목록 조회", notes = "게시물 목록을 조회합니다.")
-    public SuccessResponse<List<PostDTO>> getPostList(SearchDTO searchDTO) {
-        List<PostDTO> postList = postService.getPostList(searchDTO);
+    public SuccessResponse<Page<PostDTO>> getPostList(SearchDTO searchDTO, PageRequestCustom pageRequestCustom) {
+        Page<PostDTO> postListPaging = postService.getPostListPaging(searchDTO, pageRequestCustom.of());
 
-        return SuccessResponse.success(postList);
+        return SuccessResponse.success(postListPaging);
     }
 
     @GetMapping("post/{id}")

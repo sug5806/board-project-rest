@@ -8,6 +8,9 @@ import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.util.enumerate.SearchType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -30,7 +33,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(postCategoryQuery, postSearchQuery)
                 .join(post.user, user).fetchJoin()
                 .join(post.category, postCategory).fetchJoin()
+                .orderBy(post.date.createdAt.desc())
                 .fetch();
+    }
+
+    @Override
+    public Page<Post> postListPagingQueryDSL(SearchDTO searchDTO, Pageable pageable) {
+        BooleanExpression postCategoryQuery = postCategoryQuery(searchDTO.getCategory());
+        BooleanExpression postSearchQuery = postSearchQuery(searchDTO);
+
+        List<Post> postList = jpaQueryFactory
+                .selectFrom(post)
+                .where(postCategoryQuery, postSearchQuery)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long count = jpaQueryFactory
+                .selectFrom(post)
+                .where(postCategoryQuery, postSearchQuery)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchCount();
+
+
+        return new PageImpl<>(postList, pageable, count);
+
     }
 
     private BooleanExpression postCategoryQuery(String category) {
