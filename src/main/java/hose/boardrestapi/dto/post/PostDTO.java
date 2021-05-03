@@ -52,6 +52,7 @@ public class PostDTO {
                 .contents(post.getContents())
                 .createdAt(formatTimeString(post.getDate().getCreatedAt()))
                 .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
                 .user(UserDTO.convertToUserDTO(post.getUser()))
                 .category(PostCategoryDTO.convertToPostCategoryDTO(post.getCategory()).getName())
                 .build();

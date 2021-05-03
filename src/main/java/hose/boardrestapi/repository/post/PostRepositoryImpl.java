@@ -1,6 +1,7 @@
 package hose.boardrestapi.repository.post;
 
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hose.boardrestapi.dto.SearchDTO;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -41,12 +43,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public Page<Post> postListPagingQueryDSL(SearchDTO searchDTO, Pageable pageable) {
         BooleanExpression postCategoryQuery = postCategoryQuery(searchDTO.getCategory());
         BooleanExpression postSearchQuery = postSearchQuery(searchDTO);
+        OrderSpecifier<?> order = sortingCondition(pageable.getSort());
 
         List<Post> postList = jpaQueryFactory
                 .selectFrom(post)
                 .where(postCategoryQuery, postSearchQuery)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(order)
                 .fetch();
 
         long count = jpaQueryFactory
@@ -54,6 +58,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(postCategoryQuery, postSearchQuery)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(order)
                 .fetchCount();
 
 
@@ -84,5 +89,23 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .selectFrom(postCategory)
                 .where(postCategory.name.eq(category))
                 .fetchOne();
+    }
+
+    private OrderSpecifier<?> sortingCondition(Sort sort) {
+        OrderSpecifier<?> orderBy = null;
+
+        if (!sort.isEmpty()) {
+            List<Sort.Order> orders = sort.toList();
+            Sort.Order order = orders.get(0);
+
+            if (order.getProperty().equals("popular")) {
+                orderBy = post.likeCount.desc();
+            } else {
+                orderBy = post.date.createdAt.desc();
+            }
+
+        }
+
+        return orderBy;
     }
 }
