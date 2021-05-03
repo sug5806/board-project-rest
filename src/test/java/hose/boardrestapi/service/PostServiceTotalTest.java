@@ -1,12 +1,12 @@
 package hose.boardrestapi.service;
 
-import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.post.PostCategoryRepository;
 import hose.boardrestapi.repository.post.PostRepository;
+import hose.boardrestapi.util.custom_exception.PostNotFound;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

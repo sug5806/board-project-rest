@@ -1,6 +1,6 @@
 package hose.boardrestapi.controller.error;
 
-import hose.boardrestapi.common.custom_exception.PostNotFound;
+import hose.boardrestapi.util.custom_exception.PostNotFound;
 import hose.boardrestapi.util.response.error.CustomError;
 import hose.boardrestapi.util.response.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,5 @@
 package hose.boardrestapi.service;
 
-import hose.boardrestapi.common.custom_exception.PostNotFound;
 import hose.boardrestapi.dto.CommentDTO;
 import hose.boardrestapi.entity.Comment;
 import hose.boardrestapi.entity.User;
@@ -9,6 +8,7 @@ import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.repository.CommentRepository;
 import hose.boardrestapi.repository.UserRepository;
 import hose.boardrestapi.repository.post.PostRepository;
+import hose.boardrestapi.util.custom_exception.PostNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

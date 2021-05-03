@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import hose.boardrestapi.dto.SearchDTO;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
+import hose.boardrestapi.util.enumerate.SearchType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
@@ -41,12 +42,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private BooleanExpression postSearchQuery(SearchDTO searchDTO) {
-        if (searchDTO.getSearchType().equals("user")) {
+        SearchType searchType = SearchType.convertToType(searchDTO.getSearchType());
+
+        if (searchType == SearchType.USER) {
             return user.nickname.eq(searchDTO.getQuery());
         }
-
-        // post title
         return post.title.contains(searchDTO.getQuery());
+
     }
 
     private PostCategory getPostCategory(String category) {

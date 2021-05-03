@@ -1,4 +1,4 @@
-package hose.boardrestapi.common.custom_exception;
+package hose.boardrestapi.util.custom_exception;
 
 
 public class PostNotFound extends RuntimeException {
