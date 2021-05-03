@@ -9,8 +9,10 @@ import hose.boardrestapi.entity.User;
 import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
+import hose.boardrestapi.entity.post.PostLike;
 import hose.boardrestapi.repository.UserRepository;
 import hose.boardrestapi.repository.post.PostCategoryRepository;
+import hose.boardrestapi.repository.post.PostLikeRepository;
 import hose.boardrestapi.repository.post.PostRepository;
 import hose.boardrestapi.util.custom_exception.PostNotFound;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +34,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostCategoryRepository postCategoryRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public PostDTO getPost(Long postId) {
-        Optional<Post> byId = postRepository.findById(postId);
-
-        Post findPost = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+        Post findPost = getPostInService(postId);
 
         findPost.addViewCount();
+        List<CommentDTO> commentDTOS = CommentDTO.convertToCommentDtoList(findPost.getCommentList());
 
         return PostDTO.builder()
                 .id(findPost.getId())
@@ -46,15 +48,20 @@ public class PostService {
                 .contents(findPost.getContents())
                 .category(findPost.getCategory().getName())
                 .viewCount(findPost.getViewCount())
+                .likeCount(findPost.getLikeCount())
+                .commentCount((long) commentDTOS.size())
                 .user(UserDTO.convertToUserDTO(findPost.getUser()))
-                .commentList(CommentDTO.convertToCommentDtoList(findPost.getCommentList()))
+                .commentList(commentDTOS)
                 .build();
     }
 
-    public PostDTO createPost(PostDTO postDTO, String email) {
-        Optional<User> byEmail = userRepository.findByEmail(email);
+    private Post getPostInService(Long postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        return byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+    }
 
-        User user = byEmail.orElseThrow(() -> new UsernameNotFoundException("게시글 작성 권한이 없습니다."));
+    public PostDTO createPost(PostDTO postDTO, String email) {
+        User user = getUserInService(email);
 
         Post post = Post.builder()
                 .title(postDTO.getTitle())
@@ -74,9 +81,14 @@ public class PostService {
                 .build();
     }
 
+    private User getUserInService(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        User user = byEmail.orElseThrow(() -> new UsernameNotFoundException("게시글 작성 권한이 없습니다."));
+        return user;
+    }
+
     public PostDTO updatePost(Long postId, PostDTO postDTO, String email) {
-        Optional<Post> byId = postRepository.findById(postId);
-        Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
+        Post post = getPostInService(postId);
 
         if (post.getUser().getEmail().equals(email)) {
             post.changeTitle(postDTO.getTitle());
@@ -92,9 +104,7 @@ public class PostService {
     }
 
     public void deletePost(Long postId, String email) {
-        Optional<Post> byId = postRepository.findById(postId);
-        Post post = byId.orElseThrow(() -> new PostNotFound("해당 포스트가 존재하지 않습니다."));
-
+        Post post = getPostInService(postId);
 
         if (post.getUser().getEmail().equals(email)) {
             postRepository.delete(post);
@@ -117,5 +127,27 @@ public class PostService {
         Stream<Post> stream = postRepository.postListQueryDSL(searchDTO).stream();
 
         return stream.map(PostDTO::convertToPostDTO).collect(Collectors.toList());
+    }
+
+    public void postLike(Long postId, String email) {
+        Post post = getPostInService(postId);
+        User user = getUserInService(email);
+        Optional<PostLike> byPostAndUser = postLikeRepository.findByPostAndUser(post, user);
+
+        byPostAndUser.ifPresentOrElse(
+                postLike -> {
+                    postLikeRepository.delete(postLike);
+                    post.discountLike(postLike);
+                },
+                () -> {
+                    PostLike postLike = PostLike.builder().build();
+
+                    postLike.mappingPost(post);
+                    postLike.mappingUser(user);
+                    post.updateLikeCount();
+
+                    postLikeRepository.save(postLike);
+                }
+        );
     }
 }

@@ -84,4 +84,11 @@ public class PostController {
 
         return SuccessResponse.success(postCategoryDTOList);
     }
+
+    @PostMapping("/post/{id}/like")
+    @PreAuthorize("isAuthenticated()")
+    public SuccessResponse<String> postLike(@PathVariable(name = "id") Long postId, Principal principal) {
+        postService.postLike(postId, principal.getName());
+        return SuccessResponse.success(null);
+    }
 }

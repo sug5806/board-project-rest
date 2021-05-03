@@ -40,6 +40,9 @@ public class Post {
     @Builder.Default
     private Long viewCount = 0L;
 
+    @Builder.Default
+    private Long likeCount = 0L;
+
     public void addViewCount() {
         this.viewCount += 1;
     }
@@ -50,6 +53,9 @@ public class Post {
 
     @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<PostLike> postLikeList = new ArrayList<>();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,5 +80,18 @@ public class Post {
 
     public void mappingComment(Comment comment) {
         this.commentList.add(comment);
+    }
+
+    public void mappingPostLike(PostLike postLike) {
+        this.postLikeList.add(postLike);
+    }
+
+    public void updateLikeCount() {
+        this.likeCount = (long) this.postLikeList.size();
+    }
+
+    public void discountLike(PostLike postLike) {
+        this.postLikeList.remove(postLike);
+
     }
 }

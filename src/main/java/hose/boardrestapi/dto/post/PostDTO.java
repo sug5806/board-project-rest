@@ -41,6 +41,10 @@ public class PostDTO {
 
     private List<CommentDTO> commentList;
 
+    private Long likeCount;
+
+    private Long commentCount;
+
     public static PostDTO convertToPostDTO(Post post) {
         return PostDTO.builder()
                 .id(post.getId())

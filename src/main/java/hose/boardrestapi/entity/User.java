@@ -1,6 +1,7 @@
 package hose.boardrestapi.entity;
 
 import hose.boardrestapi.entity.post.Post;
+import hose.boardrestapi.entity.post.PostLike;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,9 +44,13 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<PostLike> postLikeList = new ArrayList<>();
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void encryptPassword(String password) {
+
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
@@ -55,6 +60,10 @@ public class User implements UserDetails {
 
     public void mappingComment(Comment comment) {
         commentList.add(comment);
+    }
+
+    public void mappingPostLike(PostLike postLike) {
+        this.postLikeList.add(postLike);
     }
 
 
