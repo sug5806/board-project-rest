@@ -1,4 +1,9 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/board-rest?autoReconnect=true&useUnicode=true&serverTimezone=UTC&characterEncoding=UTF8
     username: root
@@ -23,3 +28,17 @@ jwt:
   #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret'|base64
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
+
+cloud:
+  aws:
+    s3:
+      bucket: hese-board
+    region:
+      static: ap-northeast-2
+    credentials:
+      accessKey: ${accessKey}
+      secretKey: ${secretKey}
+      use-default-aws-credentials-chain: false
+      instance-profile: true
+    stack:
+      auto: false
