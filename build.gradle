@@ -48,6 +48,12 @@ dependencies {
 
     //querydsl 추가
     implementation 'com.querydsl:querydsl-jpa'
+
+    // 확장자 구하기용 라이브러리
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    // aws
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
 }
 
 test {
