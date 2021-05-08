@@ -8,7 +8,7 @@ import static hose.boardrestapi.entity.post.QPost.post;
 @Component("popular")
 public class OrderPopular implements OrderTypeStrategy {
     @Override
-    public OrderSpecifier<?> getOrderType() {
+    public OrderSpecifier<?> getOrder() {
         return post.likeCount.desc();
     }
 }

@@ -111,7 +111,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             OrderTypeStrategy orderTypeStrategy = orderTypeStrategyMap.get(orderType.getType());
 
-            orderBy = orderTypeStrategy.getOrderType();
+            orderBy = orderTypeStrategy.getOrder();
         }
 
         return orderBy;
