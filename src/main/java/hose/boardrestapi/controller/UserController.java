@@ -17,10 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@Api(value = "유저 API")
+@Api(tags = "유저 관련 API")
 public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
@@ -66,6 +63,17 @@ public class UserController {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         SuccessResponse<TokenDTO> successResponse = SuccessResponse.success(TokenDTO.builder().token(token).build());
+
+        return new ResponseEntity<>(successResponse, httpHeaders, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "로그아웃")
+    @GetMapping("/logout")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<SuccessResponse<String>> logout() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        SuccessResponse<String> successResponse = SuccessResponse.success(null);
 
         return new ResponseEntity<>(successResponse, httpHeaders, HttpStatus.OK);
     }
