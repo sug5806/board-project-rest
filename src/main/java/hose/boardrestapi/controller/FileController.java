@@ -3,6 +3,7 @@ package hose.boardrestapi.controller;
 import hose.boardrestapi.dto.FileUploadDTO;
 import hose.boardrestapi.service.FileService;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class FileController {
 
     @PostMapping("/image/upload")
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "이미지 업로드하기", notes = "게시글에 사용할 이미지를 업로드 합니다.", code = 200, httpMethod = "POST")
     public SuccessResponse<FileUploadDTO> imageUpload(@RequestPart MultipartFile file, Principal principal) throws IOException {
         FileUploadDTO fileUploadDTO = fileService.fileUpload(file, principal.getName());
         return SuccessResponse.success(fileUploadDTO);

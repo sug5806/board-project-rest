@@ -98,6 +98,7 @@ public class PostController {
 
     @PostMapping("/post/{id}/like")
     @PreAuthorize("isAuthenticated()")
+    @ApiOperation(value = "게시물 좋아요", notes = "게시물 좋아요 기능입니다.")
     public SuccessResponse<String> postLike(@PathVariable(name = "id") Long postId, Principal principal) {
         postService.postLike(postId, principal.getName());
         return SuccessResponse.success(null);
