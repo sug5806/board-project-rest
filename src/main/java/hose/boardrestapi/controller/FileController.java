@@ -3,6 +3,7 @@ package hose.boardrestapi.controller;
 import hose.boardrestapi.dto.FileUploadDTO;
 import hose.boardrestapi.service.FileService;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"파일 업로드 관련 API"})
 public class FileController {
 
     private final FileService fileService;

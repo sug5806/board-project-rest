@@ -3,6 +3,7 @@ package hose.boardrestapi.controller;
 import hose.boardrestapi.dto.CommentDTO;
 import hose.boardrestapi.service.CommentService;
 import hose.boardrestapi.util.response.sucess.SuccessResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@Api(tags = {"댓글 관련 API"})
 public class CommentController {
 
     private final CommentService commentService;
