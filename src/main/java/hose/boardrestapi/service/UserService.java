@@ -1,6 +1,6 @@
 package hose.boardrestapi.service;
 
-import hose.boardrestapi.dto.UserDTO;
+import hose.boardrestapi.dto.SignupDTO;
 import hose.boardrestapi.entity.User;
 import hose.boardrestapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +19,15 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public User createUser(UserDTO userDTO) {
+    public User createUser(SignupDTO signupDTO) {
         User user = User.builder()
-                .email(userDTO.getEmail())
-                .nickname(userDTO.getNickname())
+                .email(signupDTO.getEmail())
+                .nickname(signupDTO.getNickname())
                 .createdBy(LocalDateTime.now())
                 .enabled(true)
                 .build();
 
-        user.encryptPassword(userDTO.getPassword());
+        user.encryptPassword(signupDTO.getPassword());
 
         return userRepository.save(user);
     }

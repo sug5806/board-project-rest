@@ -1,7 +1,7 @@
 package hose.boardrestapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hose.boardrestapi.dto.UserDTO;
+import hose.boardrestapi.dto.SignupDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.post.PostCategoryRepository;
@@ -81,7 +81,7 @@ class PostControllerTest {
         initPostCategory();
         PostDTO postDTO = initPostDTO();
 
-        userService.createUser(UserDTO.builder()
+        userService.createUser(SignupDTO.builder()
                 .email(userEmail)
                 .password("1234")
                 .nickname("nickname")

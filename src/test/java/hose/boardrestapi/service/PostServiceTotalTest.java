@@ -1,6 +1,6 @@
 package hose.boardrestapi.service;
 
-import hose.boardrestapi.dto.UserDTO;
+import hose.boardrestapi.dto.SignupDTO;
 import hose.boardrestapi.dto.post.PostDTO;
 import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
@@ -79,7 +79,7 @@ public class PostServiceTotalTest {
         initPostCategory();
         PostDTO postDTO = initPostDTO();
 
-        userService.createUser(UserDTO.builder()
+        userService.createUser(SignupDTO.builder()
                 .email(userEmail)
                 .password("1234")
                 .nickname("nickname")

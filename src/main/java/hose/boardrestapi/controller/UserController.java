@@ -1,6 +1,7 @@
 package hose.boardrestapi.controller;
 
 import hose.boardrestapi.dto.LoginDTO;
+import hose.boardrestapi.dto.SignupDTO;
 import hose.boardrestapi.dto.TokenDTO;
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.entity.User;
@@ -34,8 +35,8 @@ public class UserController {
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
-        User user = userService.createUser(userDTO);
+    public SuccessResponse<UserDTO> createUser(@RequestBody @Valid SignupDTO signupDTO) {
+        User user = userService.createUser(signupDTO);
 
         return SuccessResponse.success(UserDTO.builder()
                 .id(user.getId())

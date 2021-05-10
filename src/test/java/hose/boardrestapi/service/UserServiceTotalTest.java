@@ -1,8 +1,7 @@
 package hose.boardrestapi.service;
 
-import hose.boardrestapi.dto.UserDTO;
+import hose.boardrestapi.dto.SignupDTO;
 import hose.boardrestapi.entity.User;
-import hose.boardrestapi.repository.UserRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,8 @@ public class UserServiceTotalTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    public UserDTO initUserDTO() {
-        return UserDTO.builder()
+    public SignupDTO initSignupDTO() {
+        return SignupDTO.builder()
                 .email("email@email.com")
                 .password("password")
                 .nickname("nickname")
@@ -35,15 +31,13 @@ public class UserServiceTotalTest {
     @Order(1)
     public void 유저_생성() throws Exception {
         //given
-        UserDTO userDTO = initUserDTO();
+        SignupDTO signupDTO = initSignupDTO();
 
         // when
-        User user = userService.createUser(userDTO);
+        User user = userService.createUser(signupDTO);
 
         // then
-        assertThat(user.getEmail()).isEqualTo(userDTO.getEmail());
-        assertThat(user.getNickname()).isEqualTo(userDTO.getNickname());
+        assertThat(user.getEmail()).isEqualTo(signupDTO.getEmail());
+        assertThat(user.getNickname()).isEqualTo(signupDTO.getNickname());
     }
-
-
 }
