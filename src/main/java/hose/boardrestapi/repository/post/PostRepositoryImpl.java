@@ -78,7 +78,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             return post.category.eq(getPostCategory(category));
         }
 
-
         return null;
     }
 
