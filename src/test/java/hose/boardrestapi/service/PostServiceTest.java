@@ -1,6 +1,7 @@
 package hose.boardrestapi.service;
 
 import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.repository.post.PostRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,10 @@ class PostServiceTest {
         return Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
-                .createAt(LocalDateTime.now())
+                .date(Date.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build()
+                )
                 .build();
     }
 

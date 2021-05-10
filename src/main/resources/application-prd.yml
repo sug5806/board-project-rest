@@ -1,0 +1,48 @@
+spring:
+  config:
+    activate:
+      on-profile: prd
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  datasource:
+    url: jdbc:mysql://${rds}:3306/board-rest?autoReconnect=true&useUnicode=true&serverTimezone=UTC&characterEncoding=UTF8
+    username: ${username}
+    password: ${password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+jwt:
+  header: Authorization
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  #echo 'silvernine-tech-spring-boot-jwt-tutorial-secret-silvernine-tech-spring-boot-jwt-tutorial-secret'|base64
+  secret: ${jwt-secret}
+  token-validity-in-seconds: 86400
+
+cloud:
+  aws:
+    s3:
+      bucket: hese-board
+    region:
+      static: ap-northeast-2
+    credentials:
+      accessKey: ${accessKey}
+      secretKey: ${secretKey}
+      use-default-aws-credentials-chain: false
+      instance-profile: true
+    stack:
+      auto: false

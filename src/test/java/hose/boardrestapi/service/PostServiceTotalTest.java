@@ -2,6 +2,7 @@ package hose.boardrestapi.service;
 
 import hose.boardrestapi.dto.UserDTO;
 import hose.boardrestapi.dto.post.PostDTO;
+import hose.boardrestapi.entity.common.Date;
 import hose.boardrestapi.entity.post.Post;
 import hose.boardrestapi.entity.post.PostCategory;
 import hose.boardrestapi.repository.post.PostCategoryRepository;
@@ -63,7 +64,10 @@ public class PostServiceTotalTest {
         return Post.builder()
                 .title(postDTO.getTitle())
                 .contents(postDTO.getContents())
-                .createAt(LocalDateTime.now())
+                .date(Date.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build()
+                )
                 .build();
     }
 
